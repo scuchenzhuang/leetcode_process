@@ -33,7 +33,7 @@ class Solution {
              for(int i=0;i<10;i++)
                  res[i]=i;
              return res;
-        }
+        }//if N==1 所有输出相同
         for(int i=1;i<=9;i++)
         {
             ans=i;
@@ -51,14 +51,14 @@ class Solution {
         int temp;
         if(N==0)
         {a.add(ans);
-         return;}
+         return;}//ans达到目标位数，添加到list并返回。
         if(last-K<=9&&last-K>=0)
         {
             temp=ans;
             temp=temp*10-K+last;
-            solve(temp,K,last-K,N-1);
+            solve(temp,K,last-K,N-1);//current位完毕之后，搜索下一位的减法可能性
         }
-         if(last+K>=0&&last+K<=9&&K!=0)
+         if(last+K>=0&&last+K<=9&&K!=0)//搜索下一位加法可能性。注意若k==0，那么加法和减法等效，再算一次会重复
         {
             temp=ans;
             temp=temp*10+K+last;
