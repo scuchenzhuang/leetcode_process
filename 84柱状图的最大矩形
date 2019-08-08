@@ -1,0 +1,56 @@
+给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
+
+求在该柱状图中，能够勾勒出来的矩形的最大面积。
+
+ 
+
+
+
+以上是柱状图的示例，其中每个柱子的宽度为 1，给定的高度为 [2,1,5,6,2,3]。
+
+ 
+
+
+
+图中阴影部分为所能勾勒出的最大矩形面积，其面积为 10 个单位。
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+    
+        Stack <Integer> stack = new Stack<>();//新建一个栈都使用的是 Stack<Integer> stack = new Stack<>()
+        stack.push(-1);//先push一个-1表示栈的底部
+        int maxarea=0;//存储输出的最大面积
+        for(int i=0;i<heights.length;i++)
+        {
+            while(stack.peek()!=-1 && heights[stack.peek()]>=heights[i])
+                maxarea=Math.max(maxarea,heights[stack.pop()]*(i-stack.peek()-1));//对于i的时候进行n个循环,如果发现现在进入的数比之前的数小的话，一个一个比较并且设定面积，直到达到找到这个数比之前的数小的时候，并且把比这个突变数都给丢掉
+                stack.push(i);//找到以后把此数放入进去，继续寻找
+            
+        }
+        while(stack.peek()!=-1)//当完毕以后还剩下一个栈
+        {
+       maxarea=Math.max(maxarea,heights[stack.pop()]*(heights.length-stack.peek()-1));//将此时栈的情况输出
+        }
+        return maxarea;
+    }
+    
+}
+
+
+本次题目引入了一个单调栈的概念，显而易见这道题的意思就是放入一个单调递增的数就继续，但是遇到一个单减的数就先计算并存储可行的最大值，并且把中间的不符合条件
+的数给丢掉，最后得出想要的结果。
+tips:
+
+
+1.Stack<Integer> stack = new Stack<>();//制造一个栈出来，类型是整形
+2.stack.pop()和stack.peek()有区别，一个是要弹栈顶，另外一个是直接得出栈顶的值
+3.本题寻找宽也是一个难点，首先要找到i-stack.peek()-1此处重要
+4.用max函数需要使用Math.max();
+
+
+
+
+
+
+
+        
