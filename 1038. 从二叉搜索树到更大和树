@@ -1,0 +1,43 @@
+给出二叉搜索树的根节点，该二叉树的节点值各不相同，修改二叉树，使每个节点 node 的新值等于原树中大于或等于 node.val 的值之和。
+
+提醒一下，二叉搜索树满足下列约束条件：
+
+节点的左子树仅包含键小于节点键的节点。
+节点的右子树仅包含键大于节点键的节点。
+左右子树也必须是二叉搜索树。
+ 
+
+示例：
+
+
+
+输入：[4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]
+输出：[30,36,21,36,35,26,15,null,null,
+
+题目很简单就是，比自己大的二叉树的值会被加在一起。当然我拿到这个题，就想的是先右-根-左这样的顺序遍历，然而由于我忘了java也可以设置全局变量.....就一直在纠结
+？？？这个怎么return，我要遍历用void怎么return太猪了。
+所以这道题的破题点在于，大值是来源于小值相加。我们可以使用一个temp来记录，右子树的值的大小，从右边开始往回走，同时，二叉搜索树保证了右大左小根中等。
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    int temp=0;//设置temp存储
+    public TreeNode bstToGst(TreeNode root) {
+        if(root!=null)
+        {
+            bstToGst(root.right);
+            temp+=root.val;
+            root.val=temp;
+            bstToGst(root.left);
+        }
+         return root;
+    }
+}
+如何看递归：第一步看终结条件，第二步从终结处往前推导。最后考虑最后一个嵌套，回溯的时候怎么往下走。同时记住，return语句看情况使用，像这种东西一般都是return node而非int
