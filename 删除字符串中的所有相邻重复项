@@ -1,0 +1,45 @@
+给出由小写字母组成的字符串 S，重复项删除操作会选择两个相邻且相同的字母，并删除它们。
+
+在 S 上反复执行重复项删除操作，直到无法继续删除。
+
+在完成所有重复项删除操作后返回最终的字符串。答案保证唯一。
+示例：
+
+输入："abbaca"
+输出："ca"
+解释：
+例如，在 "abbaca" 中，我们可以删除 "bb" 由于两字母相邻且相同，这是此时唯一可以执行删除操作的重复项。之后我们得到字符串 "aaca"，其中又只有 "aa" 可以执行重复项删除操作，所以最后的字符串为 "ca"。
+
+代码1:自己写的//这道题，看到这种相邻位置会被消减就要想到栈，递归这道题会超时，所以栈是优先考虑的。同时此时考虑的是，首字母一定是push,并且如果
+要比较字符的话，必须保证这个栈不是空栈。最后把a栈里的东西全部pop出来，注意需要扭转字符串的顺序，此处用到了StringBuilder类
+class Solution {
+    public String removeDuplicates(String S) {
+        int len=S.length();
+        int i=0;
+       Stack<Character> a= new Stack<Character>();
+        while(i<=len-1)
+        {
+            if(i==0)
+            {
+                a.push(S.charAt(i));
+            }
+            else if(!a.empty())
+            {
+                if(a.peek()==S.charAt(i))
+                {
+                    a.pop();
+                }
+                else
+                 a.push(S.charAt(i));   
+            }
+            else
+                a.push(S.charAt(i));
+            i++;
+        }
+        String temp="";
+        while(!a.empty())
+        {temp+=a.pop();}
+        return new StringBuilder(temp).reverse().toString();
+   
+    }
+}}
