@@ -1,0 +1,55 @@
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+此处主要应用的是首先，前序是根-左右，而中序是左根右。换言之，preorder是按照根的顺序排列的，我们可以先通过idx来确定根的位置
+然后接着，inorder里面的东西被根部分为了左边的左子树，右边的右子树，那么可以通过preorder的根在inorder的序号位置，将inorde
+r分成了左右两个子树，并且这两个子树可以通过hashmap搜索，使速度提升，然后依靠外部定义的变量不停的访问。
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    int[] preorder;
+    int[] inorder;
+    int idx=0;
+    HashMap<Integer,Integer> map= new HashMap<Integer,Integer>();
+    public TreeNode dfs(int low,int high)
+    {
+        if(low==high)
+            return null;//相等时表示此时根部不可能再存在一个子节点，此时结点已经确定
+        TreeNode root= new TreeNode(preorder[idx]);
+        int index=map.get(preorder[idx]);//通过hashmap的get来获得此结点值在inorder里的序号
+        idx++;
+        root.left=dfs(low,index);//区间是左闭右开
+        root.right=dfs(index+1,high);
+        return root;
+    }
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        this.preorder=preorder;//this指针的意思是，区分传入的参数和定义的preorder，传入的参数由于和定义的变量字母一样
+          //  为了区分我们使用，this。this此时就是这个Solution类的一个对象的地址，而this本身可以调用他的变量并赋值为传入的参数。
+        this.inorder=inorder;
+        int len=preorder.length;
+        for(int i=0;i<len;i++)
+            map.put(inorder[i],i);//hashmap是依靠value-key的形式放入，注意顺序
+        return dfs(0,len);
+        
+    }
+}
