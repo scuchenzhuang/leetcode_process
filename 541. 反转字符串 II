@@ -1,0 +1,38 @@
+给定一个字符串和一个整数 k，你需要对从字符串开头算起的每个 2k 个字符的前k个字符进行反转。如果剩余少于 k 个字符，则将剩余的所有全部反转。如果有小于 2k 但大于或等于 k 个字符，则反转前 k 个字符，并将剩余的字符保持原样。
+
+示例:
+
+输入: s = "abcdefg", k = 2
+输出: "bacdfeg"
+要求:
+
+该字符串只包含小写的英文字母。
+给定字符串的长度和 k 在[1, 10000]范围内。
+
+CODE:
+class Solution {
+    public static void swap(char [] a,int begin,int end){
+        while(begin<end){
+            a[begin]^=a[end];
+            a[end]^=a[begin];
+            a[begin]^=a[end];//此处即是swap，使用相位异或，不用消耗多余的内存，相当于异或同数两次后可以变成自己
+            begin++;
+            end--;
+        }
+    }
+    public String reverseStr(String s, int k) {
+        char [] c=s.toCharArray();//string类型转化成数组会方便一点，但是数组的话，长度不够有弹性，过于固定
+        int len=c.length;
+        for(int i=0;i<len; i=i+2*k){
+            if(i+2*k<=len||i+k<=len){
+                swap(c,i,i+k-1);
+            }else{
+                swap(c,i,len-1);
+            }
+           
+        }
+        return new String(c);
+        
+        
+    }
+}
