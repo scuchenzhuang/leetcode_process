@@ -1,0 +1,50 @@
+删除链表中等于给定值 val 的所有节点。
+
+示例:
+
+输入: 1->2->6->3->4->5->6, val = 6
+输出: 1->2->3->4->5
+
+code:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) { 
+        ListNode tar=new ListNode(0);//先创建一个tar链表，随便赋值满足函数要求
+        tar.next=null;//创建一个新链表同时会有产生一个next,要让next也赋值为null
+        ListNode temp=tar;//记录目标链表的根结点位置使用temp记录
+        if(head==null)
+            return null;
+        int flag=0;//flag记录此时是否存在满足条件的根部
+        while(head!=null)//循环
+        {
+            if(head.val==val)
+                head=head.next;//满足等于则跳过
+            else if(flag==0)//如果此时没有根部
+            {
+                flag=1;
+                tar.val=head.val;//第一步修改head的val
+                tar.next=null;
+                head=head.next;
+            }
+            else
+            {
+                tar.next=new ListNode(head.val);//如果链表的这个结点是null的话，他可以进行一个创建链表来得到想要的链表部位
+                tar=tar.next;
+                tar.next=null;
+                head=head.next;
+            }
+                
+        }
+        if(flag==0)
+            return null;//没有根部就返回null
+        else 
+            return temp;//有根部就返回根节点的位置
+    }
+}
