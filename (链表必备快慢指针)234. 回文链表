@@ -1,0 +1,110 @@
+请判断一个链表是否为回文链表。
+
+示例 1:
+
+输入: 1->2
+输出: false
+示例 2:
+
+输入: 1->2->2->1
+输出: true
+
+my code:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        List<Integer> list =new ArrayList<Integer>();
+        if(head==null)
+            return true;
+        int i=0;
+        while(head!=null)
+        {
+            list.add(head.val);
+            head=head.next;
+            i++;
+        }
+        // i now = length;
+        
+        for(int j=0,k=i-1;j<=k;j++,k--)
+        {
+            if(!(list.get(j)).equals(list.get(k)))   //为什么用equal？
+                return false;
+        }
+        return true;
+        
+            
+    }
+}
+
+public class TestInteger {
+	public static void main(String[] args) {
+		Integer s1 = 127, s2 = 127, t1 = 128, t2 = 128;
+		System.out.println(s1 == s2);
+		System.out.println(s1.equals(s2));
+		System.out.println(t1 == t2);
+		System.out.println(t1.equals(t2));
+		System.out.println(t1.intValue() == t2.intValue());
+	}
+}
+
+比较答案:
+
+true
+true
+false
+true
+true
+
+引用回答
+
+JVM会自动维护八种基本类型的常量池，int常量池中初始化-128~127的范围，所以当为Integer i=127时，在自动装箱过程中是取自常量池中的数值，而当Integer i=128时，128不在常量池范围内，所以在自动装箱过程中需new 128，所以地址不一样。
+
+
+
+快慢指针:
+public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        //快慢指针找到链表的中点
+        ListNode fast = head.next.next;
+        ListNode slow = head.next;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        //翻转链表前半部分
+        ListNode pre = null;
+        ListNode next = null;
+        while (head != slow) {
+            next = head.next;
+            head.next = pre;
+            pre = head;
+            head = next;
+        }
+        //如果是奇数个节点，去掉后半部分的第一个节点。
+
+        if (fast != null) {
+            slow = slow.next;
+        }
+        //回文校验
+        while (pre != null) {
+            if (pre.val != slow.val) {
+                return false;
+            }
+            pre = pre.next;
+            slow = slow.next;
+        }
+
+        return true;
+        
+    }
+]
