@@ -1,0 +1,69 @@
+给定一个整数数组 nums，将该数组升序排列。
+
+ 
+
+示例 1：
+
+输入：[5,2,3,1]
+输出：[1,2,3,5]
+示例 2：
+
+输入：[5,1,1,2,0,0]
+输出：[0,0,1,1,2,5]
+ 
+关于排序，调用库函数的排序不要太爽，当然有时候还是会想手写一下排序，相对于无脑的冒泡，利用快速排序，花一点功夫但是很快乐哈
+快排流程
+
+7 2 1 3 9 1 8 10
+1 2 1 3 9 7 8 10
+1 2 1 3 7 9 8 10
+接下来排列 1 2 1 3 和 9 8 10
+我们可以看到快排，总体来说就是一个分治算法，每次快排结束以后，会让某一个数到达应该处于的位置，并且，如果i=j相等时，终止循环，退出程序，结束快排
+
+快排伪代码
+  while(i<j&&base<a[j])
+  j--;
+  swap(a[i],a[j]);
+  while(i<j&&base>a[i])
+  i++;
+  swap(a[i],a[j]);    //关于此处，不用担心如果恰好j<=i了，但是swap。因为我们可以看到是swap了两次，换句话来说，swap2次等于没有变换嘛。
+  
+本次力扣代码如下：
+class Solution {
+    public List<Integer> sortArray(int[] nums) {
+        int len=nums.length;
+        if(len==0)
+            return null;
+        quicksort(nums,0,len-1);
+        List<Integer> list=new ArrayList<Integer>();
+        for(int i=0;i<len;i++)
+            list.add(nums[i]);
+        return list;
+        
+    }
+    public void quicksort(int[] nums,int begin,int end)
+    {
+        if(end<=begin)
+            return;
+        int i=begin;
+        int j=end;
+        int k=nums[begin];
+        int temp;
+        while(i!=j)
+        {
+            while(nums[j]>=k&&i<j)
+                j--;
+            temp=nums[i];
+            nums[i]=nums[j];
+            nums[j]=temp;//swap
+            while(nums[i]<=k&&i<j)
+                i++;
+            temp=nums[i];
+            nums[i]=nums[j];
+            nums[j]=temp;//swap agian,如果出现两次swap实际上会返回原来的值
+                
+        }
+        quicksort(nums,begin,i-1);
+        quicksort(nums,i+1,end);
+    }
+}
