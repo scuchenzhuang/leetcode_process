@@ -1,0 +1,30 @@
+给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+
+示例:
+
+输入: ["eat", "tea", "tan", "ate", "nat", "bat"],
+输出:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+
+题干很简单，用map建立一个string和map对应的映射。同时对string的元素进行排序，使其满足基本的映射关系
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String,List> map=new HashMap<String,List>();
+        for(String s : strs )
+        {
+            char[] arr = s.toCharArray(); //将字符串转化为数组
+            Arrays.sort(arr);//此处的sort是按照字母的ascii码的顺序排序的
+            String tmp=String.valueOf(arr);//将字符数组转化为string
+            if(!map.containsKey(tmp))
+                map.put(tmp,new ArrayList());
+            map.get(tmp).add(s);
+        }
+        return new ArrayList(map.values());
+    }
+}
+
+
