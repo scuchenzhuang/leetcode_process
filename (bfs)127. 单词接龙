@@ -1,0 +1,84 @@
+给定两个单词（beginWord 和 endWord）和一个字典，找到从 beginWord 到 endWord 的最短转换序列的长度。转换需遵循如下规则：
+
+每次转换只能改变一个字母。
+转换过程中的中间单词必须是字典中的单词。
+说明:
+
+如果不存在这样的转换序列，返回 0。
+所有单词具有相同的长度。
+所有单词只由小写字母组成。
+字典中不存在重复的单词。
+你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+示例 1:
+
+输入:
+beginWord = "hit",
+endWord = "cog",
+wordList = ["hot","dot","dog","lot","log","cog"]
+
+输出: 5
+
+解释: 一个最短转换序列是 "hit" -> "hot" -> "dot" -> "dog" -> "cog",
+     返回它的长度 5。
+BFS(树的层次遍历)
+建造一个队列，建造一个trace[]数组记录是否经过，先存入起点
+While(队列不为空)进入循环
+层数加一
+将本层结点都搜索完While(size-->0)Cur=queue.poll()
+循环搜索cur连接的节点
+如果遇到连接的节点已经被搜索过了，返回
+如果满足条件，将此节点入队列
+如果遇到了终结条件，退出
+
+CODE:
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        int len=wordList.size();
+        Queue<String> queue=new LinkedList<String>();
+        boolean[] trace = new boolean[len+1];
+        queue.add(beginWord);
+        int step=1;
+        while(!queue.isEmpty())
+        {
+            step++;
+            int size=queue.size();
+            while(size-->0)
+            {
+                String cur=queue.poll();
+                for(int i=0;i<len;i++)
+                {
+                    String tmp=wordList.get(i);
+                    if(trace[i])
+                        continue;
+                    if(possible(cur,tmp))
+                       {
+                           if(tmp.equals(endWord))
+                               return step;
+                           queue.add(tmp);
+                           trace[i]=true;
+                       }
+                    
+                }
+
+            }
+           
+        }
+        return 0;
+        
+    }
+    public boolean possible(String cur,String tar)
+    {
+        int diff=0;
+        int len=cur.length();
+        for(int i=0;i<len;i++)
+        {
+            char tmp1=cur.charAt(i);
+            char tmp2=tar.charAt(i);
+            if(tmp1!=tmp2)
+                diff++;
+            if(diff>1)
+                return false;
+        }
+        return true;
+    }
+}
