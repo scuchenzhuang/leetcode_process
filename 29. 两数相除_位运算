@@ -1,0 +1,36 @@
+给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。
+
+返回被除数 dividend 除以除数 divisor 得到的商。
+
+class Solution {
+    public int divide(int dividend, int divisor) {
+        boolean flag=(dividend > 0) ^ (divisor > 0);
+        int a= dividend<0 ? dividend:-dividend; 
+        int b=divisor<0 ? divisor:-divisor;//此处把a和b都转化为负数来判断
+        int result=0;
+        while(a<=b)
+        {
+            int temp_result=-1;
+            int temp_b=b;
+            while(a<=(temp_b<<1))//使需要检测的a始终小于tempb*2的值（换言之，a的绝对值始终大于2b保证可以进行结果双倍）
+            {
+                if(temp_b<=(Integer.MIN_VALUE>>1))(如果2b<MinValue，那么结束循环)
+                    break;
+                temp_b=temp_b<<1;
+                temp_result=temp_result<<1;//此处就是判断，如果a需要b的1步还可以继续需要，那么b继续移动(*2)，而结果也乘以2
+            }
+            a=a-temp_b;//剩余没被走过的步数继续计算，此处类似于30/3得到最大的24以后，还剩下6需要被判断。
+            result+=temp_result;
+        }
+        if(flag)
+            return result;
+        else
+        {
+            if(result<=Integer.MIN_VALUE)
+                return Integer.MAX_VALUE;
+            else
+                return -result;
+        }
+    }
+    
+}
