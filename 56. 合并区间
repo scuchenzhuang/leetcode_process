@@ -31,6 +31,7 @@ class Solution {
             }//寻找可以的区间
          
             list.add(new int[]{left,right});
+            i++;
         }
         return list.toArray(new int[0][]);//关于list.toArray()此处类似于Stirng[0]的设定，具体我将在自己的文档写明
     }
