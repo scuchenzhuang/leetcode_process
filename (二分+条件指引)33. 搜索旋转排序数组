@@ -1,0 +1,48 @@
+假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+
+( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。
+
+搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+
+你可以假设数组中不存在重复的元素。
+
+你的算法时间复杂度必须是 O(log n) 级别。
+
+示例 1:
+
+输入: nums = [4,5,6,7,0,1,2], target = 0
+输出: 4
+示例 2:
+
+输入: nums = [4,5,6,7,0,1,2], target = 3
+输出: -1
+
+class Solution{
+    public int search(int[] nums,int target)
+    {
+        int l=0;
+        int r=nums.length-1;
+        int mid;
+        while(l<r)
+        {
+            mid=l+(r-l)/2;
+            if((nums[mid]<nums[0])^(nums[0]>target)^(nums[mid]<target))
+            //nums[mid]<nums[0]说明前面的集合没有顺序
+            //nums[0]>target说明前面的集合并没有包括想要的target，无论有序还是无序
+            //nums[mid]<target说明target需要的元素应该是比mid大，如果前面是无序集合且nums[0]>target，说明在后方
+            l=mid+1;//在后方则使l向后移动
+            else
+            r=mid;//在前方，所以让r向做移动，始终包括当前数字
+
+        }
+        return l==r&&nums[l]==target ? l : -1;//要求l==r，如果nums[l]==target即说明两者可以相等，则输出index；否则输出-1
+    }
+}
+题设相对来说就是一个裸的二分法，但是有一个比较重要的地方，需要通过几个条件的设置，来判断最后达到的结果
+
+
+
+
+
+
+
