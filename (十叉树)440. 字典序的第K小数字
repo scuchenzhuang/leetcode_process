@@ -1,0 +1,50 @@
+给定整数 n 和 k，找到 1 到 n 中字典序第 k 小的数字。
+
+注意：1 ≤ k ≤ n ≤ 109。
+
+示例 :
+
+输入:
+n: 13   k: 2
+
+输出:
+10
+
+解释:
+字典序的排列是 [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]，所以第二小的数字是 10。
+这道题的处理类似于十叉树，对于1，10，2，11排序  1<10<11<2换言之 1->10实际上只是移动了一个大小，而1->2是变成了很多个大小
+对此我们的处理是 prefix存储前缀，next=prefix+1处理后缀，使得前缀和后缀的数字相互相减获得两者之间的节点的个数。
+class Solution {
+    public int findKthNumber(int n, int k) {
+        int prefix=1;
+        int p=1;
+        while(p<k)
+        {
+            int temp=count(prefix,n);
+            if(p+temp<=k)
+            {
+                prefix++;//PREFIX++实际上使得了指针指向的数字大小移动多个位置
+                p+=temp;
+            }
+            else
+            {
+                prefix*=10;//prefix*10实际上使得指针的数字大小向后移动了一位
+                p++;
+            }
+        }
+        return prefix;
+    }
+    public int count(long now,long n)//此函数用于获取此前缀下的元素个数
+    {
+        long tmp=now;//
+        long next=tmp+1;//前缀之后的数
+        int count1=0;
+        while(tmp<=n)//注意此处是<=因为可能会出现，n=10，k=3的情况
+        {
+            count1+=Math.min(n+1,next)-tmp;//此处有可能123的情况，12前缀的数字的下面只有0，1，2，3四个节点，而不是NEXT-TMP，所以需要改成MATH.MIN判断
+            tmp*=10;
+            next*=10;
+        }
+        return count1;
+    }
+    }
