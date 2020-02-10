@@ -1,0 +1,44 @@
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+
+Example:
+
+Given the sorted linked list: [-10,-3,0,5,9],
+
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+
+
+We can find that every root is defined by the middle number of the linked list, so basially this question is to find the middle 
+of the linked list.
+But it is not the array as we can not find the middle through the subscript. The only method for us is use slow-quick pointer;
+
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head==null)
+            return null;//如果链表为空，直接返回空的树
+       return helper(head,null);//设置null为helper函数的终结位置，同时设置head为起点
+    }
+    public TreeNode helper(ListNode head,ListNode tail)
+    {
+        if(head==tail)
+        return null;//如果head和tail相同，那么直接返回即中介条件
+        ListNode slow=head;//设置slow为head
+        ListNode fast=head;//设置fast也为head,此下为快慢指针的模版函数
+        while(fast!=tail&&fast.next!=tail)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+        }
+        TreeNode root=new TreeNode(slow.val);//用root作为初始返回根
+        TreeNode root.left=helper(head,slow);//二分法的前面部分，slow作为结尾始终取不到
+        TreeNode root.right=helper(slow.next,tail);//slow.next作为首部一般都取得到
+        return root;
+    }
+}
