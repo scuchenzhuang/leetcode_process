@@ -1,0 +1,13 @@
+void mergesort()
+{
+
+if(end>begin)
+{
+int mid=begin+(end-begin)/2;
+mergesort(begin,mid-1)
+mergesort(mid,end)
+merge(begin,mid,end)
+}
+
+}
+void merge()
