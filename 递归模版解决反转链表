@@ -1,0 +1,113 @@
+翻转某些数字的模版
+if(n==1)
+{
+return head;//base case
+}
+还有一种base case是
+if(head==null||head.next==null)
+return head;
+
+
+ListNode newhead=reverseN(head.next,n-1);
+head.next.next=head;   1->2<-3<-4  //此处的含义是2指向1
+head.next=null/successor      //此处的含义是让head指向下一个不被循环的部分，或者null，总而言之不要形成环
+return newhead//输出newhead
+
+
+
+
+第一种
+反转一个单链表。
+示例:
+输入: 1->2->3->4->5->NULL
+输出: 5->4->3->2->1->NULL
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null)
+            return null;
+        if(head.next==null)
+            return head;//base case一旦只剩下一个数的时候直接返回新的head出来
+        ListNode newhead=reverseList(head.next);   //newhead是由base case返回出来的最后一个节点
+        head.next.next=head;//  此时出现的成果是 1->2<-3<-4   所以head.next就是2，然后让2.next指向1
+        head.next=null;//头部节点head下一个设置为null
+        return newhead;//返回新的头部
+    }
+}
+
+第二种
+翻转链表前N个项和翻转从m到n的位置翻转
+反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+
+说明:
+1 ≤ m ≤ n ≤ 链表长度。
+
+示例:
+
+输入: 1->2->3->4->5->NULL, m = 2, n = 4
+输出: 1->4->3->2->5->NULL
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if(head==null)
+            return head;
+        if(m==1)
+            return reverseN(head,n);//base case
+        head.next=reverseBetween(head.next,m-1,n-1);//也就是说 把整个函数链表不断的递归逼近查看到翻转前n个列表的情况
+        return head;
+    }
+    ListNode successor=null;//此处由于只翻转n个，所以需要把翻转的最后一个数指向的不翻转部分给记住
+    public ListNode reverseN(ListNode head,int n)//翻转前n个数的代码
+    {
+        if(n==1)
+        {
+            successor=head.next;//记住它的不翻转部分
+            return head;//base case 如果此时只有一个数就返回head出来
+        }
+        ListNode newhead=reverseN(head.next,n-1);//递归，翻转前n-1个数字
+        head.next.next=head;//套路，将 1->2<-3<-4   中的2指向1
+        head.next=successor;//将head也就是 1指向不需要翻转的部分
+        return newhead;
+    }
+}
+
+第三种
+给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+
+k 是一个正整数，它的值小于或等于链表的长度。
+
+如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+
+示例 :
+
+给定这个链表：1->2->3->4->5
+
+当 k = 2 时，应当返回: 2->1->4->3->5
+
+当 k = 3 时，应当返回: 3->2->1->4->5
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode a=head,b=head;
+        for(int i=0;i<k;i++)
+        {
+            if(b==null)
+                return head;
+            b=b.next;
+        }
+        ListNode newhead=reverse(a,b);
+        a.next=reverseKGroup(b,k);
+        return newhead;
+    }
+    public ListNode reverse(ListNode a,ListNode b)
+    {
+        ListNode pre=null,cur=a,nxt=a;
+        while(cur!=b)
+        {
+            nxt=cur.next;
+            cur.next=pre;
+            pre=cur;
+            cur=nxt;
+        }
+        return pre;
+    }
+}
