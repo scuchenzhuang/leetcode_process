@@ -1,0 +1,36 @@
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int len=nums.length;
+        if(len==1||len==0)
+            return;
+        int i=-1,j=-1;//设定i=-1
+        for(int t=0;t<len-1;t++)
+        {
+            if(nums[t]<nums[t+1])
+            {
+                i=t;
+            }
+        }//从前往后寻找，最大的索引 满足nums[i]<nums[i+1]
+        if(i==-1)
+        {
+            Arrays.sort(nums);
+            return;
+        }//如果i的索引为-1，说明这样的索引不存在，直接升序排列
+        int min=nums[i+1];//min保存和nums[i]差距最小的数
+        for(int t=len-1;t>i;t--)
+        {
+            if(nums[t]>nums[i]&&nums[t]<=min)
+            {
+                j=t;
+                min=nums[t];
+                break;//如果大于nums[i],并且比min小则更新
+            }
+        }
+        int tmp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=tmp;//交换
+        Arrays.sort(nums,i+1,len);//排序后续的数组
+        return;
+        
+    }
+}
