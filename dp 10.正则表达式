@@ -1,0 +1,75 @@
+给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
+
+'.' 匹配任意单个字符
+'*' 匹配零个或多个前面的那一个元素
+所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+
+说明:
+
+s 可能为空，且只包含从 a-z 的小写字母。
+p 可能为空，且只包含从 a-z 的小写字母，以及字符 . 和 *。
+示例 1:
+
+输入:
+s = "aa"
+p = "a"
+输出: false
+解释: "a" 无法匹配 "aa" 整个字符串。
+示例 2:
+
+输入:
+s = "aa"
+p = "a*"
+输出: true
+解释: 因为 '*' 代表可以匹配零个或多个前面的那一个元素, 在这里前面的元素就是 'a'。因此，字符串 "aa" 可被视为 'a' 重复了一次。
+示例 3:
+
+输入:
+s = "ab"
+p = ".*"
+输出: true
+解释: ".*" 表示可匹配零个或多个（'*'）任意字符（'.'
+
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int m=s.length();
+        int n=p.length();
+        boolean[][] dp=new boolean[m+1][n+1];
+        dp[0][0]=true;//双空集合可以匹配
+        int k=2;
+        while(k<=n)
+        {
+            if(p.charAt(k-1)=='*')
+                dp[0][k]=dp[0][k-2];//此处是关于这样的匹配：如 a 和 ac*其实是匹配的，所以ac*的是否能匹配取决于*往前移动两格位置是否匹配
+            //此处也就是base case的初始化
+            k++;
+        }
+        for(int i=1;i<=m;i++)
+            for(int j=1;j<=n;j++)
+            {/*此处有个很重要的dp方程
+                        1.i==j/j==万金油'.' 则 dp[i][j]=dp[i-1][j-1];  dp的含义就是i个元素的字符串和j字符串匹配否，i-1和j-1表示他们两个匹配
+            dp[i][j]=   2.j=='*'      分情况:(1) j-1 != i && j-1!='.'   dp[i][j]=dp[i][j-2];
+                                           （2） j-1==i/ j-1=='.'    dp[i][j]=dp[i-1][j]||dp[i][j-2];  此处，实际上分别是 ab和abb*对应（可以删除b*）
+                                                 abbbbb和ab*对应（看i-1和j的数组匹配了没，如果匹配成功则说明可以增加多的i进来匹配）
+                                                 */
+            
+                char tmp1=s.charAt(i-1);
+                char tmp2=p.charAt(j-1);
+                
+                
+                if(tmp1==tmp2||tmp2=='.')
+                    dp[i][j]=dp[i-1][j-1];
+                else if(tmp2=='*')
+                {
+                    char tmp3=p.charAt(j-2);
+                    if(tmp1!=tmp3&&tmp3!='.')
+                        dp[i][j]=dp[i][j-2];
+                    else if(tmp3==tmp1||tmp3=='.')
+                    {
+                        dp[i][j]=dp[i-1][j]||dp[i][j-2];
+                    }
+                }
+            }
+        return dp[m][n];
+    }
+}
