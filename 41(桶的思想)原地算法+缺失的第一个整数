@@ -1,0 +1,47 @@
+给定一个未排序的整数数组，找出其中没有出现的最小的正整数。
+
+示例 1:
+
+输入: [1,2,0]
+输出: 3
+示例 2:
+
+输入: [3,4,-1,1]
+输出: 2
+示例 3:
+
+输入: [7,8,9,11,12]
+输出: 1
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        //这道题的key point 是通过移动，把数字替换，使其放在恰当的位置，类似于 把i放在nums[i-1]的位置，这样把
+        //同时由于是寻找最小的正整数，所以其中可能性应该从1到len+1的长度之间。为什么
+        //例如 5 6 7 8 9     min=1
+        // 1 2 3 4。         min=5
+        //1 2 -3 4           min=3
+        //所以把所有的len以下的数放在对应的位置
+        //最后找到nums[i-1]!=i的位置，此位置的其中的数便是错误放置的数，也就是第一个残缺的整数
+        //1 2 3 4 这类单独讨论，直接输出 len+1也就是5
+        int len=nums.length;
+        for(int i=0;i<len;i++)
+        {
+            while(nums[i]>=1&&nums[i]<=len&&nums[nums[i]-1]!=nums[i])//通过while不停的置换，让nums[i]处放置的元素要么是i+1要么是非正数
+                swap(nums,i,nums[i]-1);
+        }
+        for(int t=0;t<len;t++)
+        {
+            if(nums[t]!=t+1)
+                return t+1;
+            
+        }
+        return len+1;
+    }
+    public void swap(int[] nums,int index1,int index2)
+    {
+        int tmp=nums[index1];
+        nums[index1]=nums[index2];
+        nums[index2]=tmp;
+        
+    }
+}
